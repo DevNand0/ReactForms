@@ -1,20 +1,58 @@
 <div class="container-fluid">
   <h2>Formulario de Registro</h2>
-  <form action="" >
+  <form [formGroup]="registrationForm" action="" >
     <div class="form-group">
       <label for="">Username</label>
-      <input type="text" class="form-control">
+      <input [class.is-invalid]="nombre.invalid && nombre.touched" 
+             formControlName="nombre" type="text" class="form-control">
+      <div *ngIf="nombre.invalid && nombre.touched">
+        <small *ngIf="nombre.errors?.required" class="text-danger">nombre es requerido</small>
+        <small *ngIf="nombre.errors?.minLength" class="text-danger">la longitud minimo es de 4 caracteres</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="">Email</label>
+      <input [class.is-invalid]="email.invalid && email.touched" 
+             formControlName="email" type="text" class="form-control">
+        <small [class.d-none]="email.valid||email.untouched" class="text-danger">email es requerido</small>
+    </div>
+
+    <div class="form-check mb-3">
+      <input type="checkbox" formControlName="subscribe" class="form-check-input">
+      <label for="" class="form-check-label">
+        Enviar promociones
+      </label>
     </div>
 
     <div class="form-group">
       <label for="">Password</label>
-      <input type="password" class="form-control">
+      <input formControlName="password" type="password" class="form-control">
     </div>
 
     <div class="form-group">
       <label for="">Confirm Password </label>
-      <input type="password" class="form-control">
+      <input [class.is-invalid]="registrationForm.errors?.misMatch" formControlName="confirmPassword" type="password" class="form-control">
+      <small *ngIf="registrationForm.errors?.misMatch" class="text-danger">Los passwords no coinciden</small>
     </div>
+
+    <div formGroupName="address">
+      <div class="form-group">
+        <label for="">Ciudad</label>
+        <input formControlName="ciudad" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="">Provincia</label>
+        <input formControlName="provincia" type="text" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="">Codigo Postal</label>
+        <input formControlName="postal" type="text" class="form-control">
+      </div>
+    </div>
+    
     <button class="btn btn-primary" type="submit">Register</button>
+    <button class="btn btn-secondary ml-2" type="button" (click)="loadApiData()">Load API Data</button>
   </form>
+  {{registrationForm.value|json}}
 </div>
