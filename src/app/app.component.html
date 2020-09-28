@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <h2>Formulario de Registro</h2>
-  <form [formGroup]="registrationForm" action="" >
+  <form [formGroup]="registrationForm" action="" (ngSubmit)="onSubmit()" >
     <div class="form-group">
       <label for="">Username</label>
       <input [class.is-invalid]="nombre.invalid && nombre.touched" 
@@ -13,9 +13,13 @@
 
     <div class="form-group">
       <label for="">Email</label>
+      <button class="btn btn-secondary btn-sm m-2" type="button" (click)="addAlternateEmail()">Agregar Email</button>
       <input [class.is-invalid]="email.invalid && email.touched" 
              formControlName="email" type="text" class="form-control">
-        <small [class.d-none]="email.valid||email.untouched" class="text-danger">email es requerido</small>
+      <small [class.d-none]="email.valid||email.untouched" class="text-danger">email es requerido</small>
+      <div formArrayName="alternateEmails" *ngFor="let email of alternateEmails.controls; let i=index">
+        <input type="text" name="" id="" [formControlName]="i" class="form-control my-1">
+      </div>
     </div>
 
     <div class="form-check mb-3">
@@ -32,8 +36,7 @@
 
     <div class="form-group">
       <label for="">Confirm Password </label>
-      <input [class.is-invalid]="registrationForm.errors?.misMatch" formControlName="confirmPassword" type="password" class="form-control">
-      <small *ngIf="registrationForm.errors?.misMatch" class="text-danger">Los passwords no coinciden</small>
+      <input formControlName="confirmPassword" type="password" class="form-control">
     </div>
 
     <div formGroupName="address">
@@ -51,7 +54,7 @@
       </div>
     </div>
     
-    <button class="btn btn-primary" type="submit">Register</button>
+    <button [disabled]="!registrationForm.valid" class="btn btn-primary" type="submit">Register</button>
     <button class="btn btn-secondary ml-2" type="button" (click)="loadApiData()">Load API Data</button>
   </form>
   {{registrationForm.value|json}}
